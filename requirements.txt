@@ -18,3 +18,4 @@ pydantic[email]
 tortoise
 python-dotenv
 python-multipart
+python-jose
