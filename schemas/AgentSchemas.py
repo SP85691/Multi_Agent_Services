@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 
 class AgentBase(BaseModel):
@@ -18,6 +18,8 @@ class AgentResponse(AgentBase):
     user_id: int
     created_at: datetime
     updated_at: datetime
+    document_paths: Optional[List[str]] = None
+    prompt_template: Optional[str] = None
 
     class Config:
         orm_mode = True

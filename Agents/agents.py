@@ -4,11 +4,12 @@ from typing import List
 from schemas.AgentSchemas import AgentCreate, AgentUpdate, AgentResponse
 from services.db_config import get_db
 from services.auth import get_current_user
-from services.agent_management import create_agent, get_agents_by_session, get_agent_by_id, update_agent, delete_agent
+from services.agent_management import create_agent, get_agents_by_session, get_agent_by_id, update_agent, delete_agent, prepare_rag_chain
 from services.session_management import get_session_by_id
 from models.UserModels import User
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
+import os
 
 agent_routes = APIRouter(tags=["Agents"])
 templates = Jinja2Templates(directory="templates")
@@ -65,7 +66,16 @@ async def prepare_agent(session_id: str, agent_id: str, instructions: str = Form
     if agent.user_id != current_user.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You do not have permission to prepare this agent")
     
-    # Process the uploaded documents and instructions here
-    # For example, save the documents to a directory and store the instructions in the database
+    # Process the uploaded documents and instructions
+    document_paths = []
+    for document in documents:
+        document_path = f"documents/{document.filename}"
+        os.makedirs(os.path.dirname(document_path), exist_ok=True)
+        with open(document_path, "wb") as f:
+            f.write(document.file.read())
+        document_paths.append(document_path)
+
+    # Call the function to prepare the RAG chain
+    prepare_rag_chain(agent_id, instructions, document_paths, db)
 
     return {"message": "Agent prepared successfully"}

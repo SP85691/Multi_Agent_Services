@@ -1,5 +1,8 @@
-.venv
+.venv/
 __pycache__/
 .env
 venv/
 multi_agent.sqlite3
+doc_parser/
+doc_parser/sentence-transformers/
+documents/

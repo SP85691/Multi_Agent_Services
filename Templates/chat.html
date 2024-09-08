@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Chat with Agent - Multi Agent Services{% endblock %}
+
+{% block header %}
+    <h1 class="text-2xl font-bold">Chat with Agent</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+        <div id="chat-box" class="bg-gray-700 p-4 rounded-lg shadow-lg w-full max-w-md mx-auto h-96 overflow-y-auto">
+            <!-- Chat messages will be appended here -->
+        </div>
+        <div class="mt-4">
+            <form id="chat-form">
+                <div class="flex space-x-4">
+                    <input type="text" id="chat-message" name="chat-message" class="w-full p-2 rounded bg-gray-700 text-gray-100" placeholder="Type your message..." required>
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Send</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loader -->
+    <div id="loader" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+        <div class="loader"></div>
+    </div>
+
+    <script>
+        document.getElementById('chat-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            document.getElementById('loader').classList.remove('hidden');
+            const message = document.getElementById('chat-message').value;
+            const sessionId = "{{ session_id }}";
+            const agentId = "{{ agent_id }}";
+            const response = await fetch(`/sessions/${sessionId}/agents/${agentId}/chat`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${document.cookie.split('=')[1]}`
+                },
+                body: JSON.stringify({ message: message, session_id: sessionId, agent_id: agentId, user_id: {{ current_user.id }} })
+            });
+            document.getElementById('loader').classList.add('hidden');
+            if (response.ok) {
+                const chatResponse = await response.json();
+                const chatBox = document.getElementById('chat-box');
+                const userMessage = document.createElement('div');
+                userMessage.className = 'text-right text-white mb-2';
+                userMessage.textContent = message;
+                chatBox.appendChild(userMessage);
+                const agentResponse = document.createElement('div');
+                agentResponse.className = 'text-left text-gray-300 mb-2';
+                agentResponse.textContent = chatResponse.response;
+                chatBox.appendChild(agentResponse);
+                document.getElementById('chat-message').value = '';
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } else {
+                alert('Failed to send message');
+            }
+        });
+    </script>
+
+    <style>
+        .loader {
+            width: 50px;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            border: 8px solid;
+            border-color: #3498db #3498db00;
+            animation: l1 1s infinite;
+        }
+        @keyframes l1 {
+            to { transform: rotate(.5turn); }
+        }
+    </style>
+{% endblock %}

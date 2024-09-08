@@ -18,3 +18,4 @@ class User(Base):
 
     sessions = relationship("Session", back_populates="user")
     agents = relationship("Agent", back_populates="user")
+    chats = relationship("Chat", back_populates="user")  # Add this line

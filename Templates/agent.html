@@ -24,16 +24,27 @@
             <p class="text-gray-300">Name: {{ agent.name }}</p>
             <p class="text-gray-300">ID: {{ agent.id }}</p>
         </div>
-        <div class="flex justify-center mt-4">
+        <div class="flex justify-center mt-4 space-x-4">
             <button id="prepare-agent-btn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
                 Prepare Agent
+            </button>
+            <button id="chat-agent-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded hidden">
+                Chat with Agent
+            </button>
+            <button id="start-chat-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Start Chat
             </button>
         </div>
     </div>
 
+    <!-- Loader -->
+    <div id="loader" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+        <div class="loader"></div>
+    </div>
+
     <!-- Modal for preparing agent -->
     <div id="prepare-agent-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
-        <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md relative">
             <h3 class="text-xl font-bold mb-4">Prepare Agent</h3>
             <form id="prepare-agent-form">
                 <div class="mb-4">
@@ -49,6 +60,17 @@
                     <button type="button" id="close-prepare-modal-btn" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Cancel</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h3 class="text-xl font-bold mb-4">Success</h3>
+            <p class="text-gray-300 mb-4">Agent prepared successfully.</p>
+            <div class="flex items-center justify-center">
+                <button id="close-success-modal-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Close</button>
+            </div>
         </div>
     </div>
 
@@ -98,6 +120,8 @@
 
         document.getElementById('prepare-agent-form').addEventListener('submit', async function(event) {
             event.preventDefault();
+            document.getElementById('prepare-agent-modal').classList.add('hidden');
+            document.getElementById('loader').classList.remove('hidden');
             const formData = new FormData();
             const documents = document.getElementById('documents').files;
             for (let i = 0; i < documents.length; i++) {
@@ -111,11 +135,44 @@
                 },
                 body: formData
             });
+            document.getElementById('loader').classList.add('hidden');
             if (response.ok) {
-                window.location.reload();
+                document.getElementById('chat-agent-btn').classList.remove('hidden');
+                document.getElementById('chat-agent-btn').disabled = false;
+                document.getElementById('success-modal').classList.remove('hidden');
             } else {
                 alert('Failed to prepare agent');
             }
         });
+
+        document.getElementById('close-success-modal-btn').addEventListener('click', function() {
+            document.getElementById('success-modal').classList.add('hidden');
+        });
+
+        document.getElementById('chat-agent-btn').addEventListener('click', function() {
+            const sessionId = "{{ session.id }}";
+            const agentId = "{{ agent.id }}";
+            window.location.href = `/sessions/${sessionId}/agents/${agentId}/chat`;
+        });
+
+        document.getElementById('start-chat-btn').addEventListener('click', function() {
+            const sessionId = "{{ session.id }}";
+            const agentId = "{{ agent.id }}";
+            window.location.href = `/sessions/${sessionId}/agents/${agentId}/chat`;
+        });
     </script>
+
+    <style>
+        .loader {
+            width: 50px;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            border: 8px solid;
+            border-color: #3498db #3498db00;
+            animation: l1 1s infinite;
+        }
+        @keyframes l1 {
+            to { transform: rotate(.5turn); }
+        }
+    </style>
 {% endblock %}

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Text
 from sqlalchemy.orm import relationship
 from services.db_config import Base
 from datetime import datetime
@@ -13,6 +13,9 @@ class Agent(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    document_paths = Column(Text, nullable=True)  # Store document paths as a JSON string
+    prompt_template = Column(Text, nullable=True)  # Store the prompt template
 
     session = relationship("Session", back_populates="agent")
     user = relationship("User", back_populates="agents")
+    chats = relationship("Chat", back_populates="agent")  # Add this line

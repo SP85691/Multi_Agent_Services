@@ -15,3 +15,4 @@ class Session(Base):
 
     user = relationship("User", back_populates="sessions")
     agent = relationship("Agent", uselist=False, back_populates="session")  # One-to-one relationship
+    chats = relationship("Chat", back_populates="session")  # Add this line
