@@ -9,5 +9,49 @@
 {% block content %}
     <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
         <h2 class="text-xl font-semibold mb-4">Session Information : {{ session.id }}</h2>
+        <div class="mt-4 flex space-x-4">
+            <button id="update-session-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Update Session
+            </button>
+            <button id="delete-session-btn" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                Delete Session
+            </button>
+        </div>
     </div>
+    <script>
+        document.getElementById('update-session-btn').addEventListener('click', async function() {
+            const newName = prompt('Enter new session name:');
+            if (newName) {
+                const response = await fetch(`/sessions/{{ session.id }}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${document.cookie.split('=')[1]}`
+                    },
+                    body: JSON.stringify({ name: newName })
+                });
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    alert('Failed to update session');
+                }
+            }
+        });
+
+        document.getElementById('delete-session-btn').addEventListener('click', async function() {
+            if (confirm('Are you sure you want to delete this session?')) {
+                const response = await fetch(`/sessions/{{ session.id }}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${document.cookie.split('=')[1]}`
+                    }
+                });
+                if (response.ok) {
+                    window.location.href = "{{ url_for('playground_page') }}";
+                } else {
+                    alert('Failed to delete session');
+                }
+            }
+        });
+    </script>
 {% endblock %}

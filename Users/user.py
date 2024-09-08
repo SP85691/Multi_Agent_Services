@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Request, Form
+from fastapi import APIRouter, Depends, HTTPException, status, Request, Form, staticfiles
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.security import OAuth2PasswordBearer
@@ -12,6 +12,7 @@ from services.session_management import create_session, get_active_sessions, upd
 
 user_routes = APIRouter(tags=['Users'])
 templates = Jinja2Templates(directory="templates")
+user_routes.mount("/Static", staticfiles.StaticFiles(directory="Static"), name="Static")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 @user_routes.get("/login", response_class=HTMLResponse, name="login_page")

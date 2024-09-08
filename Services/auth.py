@@ -61,6 +61,22 @@ def get_current_user(request: Request, db: Session = Depends(get_db)):
         raise credentials_exception
     return user
 
+def get_optional_user(request: Request, db: Session = Depends(get_db)):
+    token = request.cookies.get("access_token")
+    if not token:
+        return None
+    token = token.split(" ")[1]  # Remove "Bearer" prefix
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            return None
+    except JWTError:
+        return None
+
+    user = get_user_by_username(username, db)
+    return user
+
 def authenticate_user(username: str, password: str, db: Session = Depends(get_db)):
     user = get_user_by_username(username, db)
     if not user:
