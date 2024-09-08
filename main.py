@@ -7,6 +7,7 @@ from services.auth import authenticate_user, create_access_token, ACCESS_TOKEN_E
 from services.db_config import setup_db, get_db
 from models.UserModels import User
 from Users import user
+from Sessions import sessions
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -16,13 +17,13 @@ origins = [
     "http://localhost:8080",
 ]
 
-
 load_dotenv()
 
 engine, Session = setup_db()
 
 app = FastAPI(title="Multi Agent API Services", description="This is a multi agent api services")
 app.include_router(user.user_routes)
+app.include_router(sessions.session_routes)
 
 app.add_middleware(
     CORSMiddleware,

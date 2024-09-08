@@ -33,9 +33,19 @@ class UserResponse(BaseModel):
     updatedAt: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class UserRegisterResponse(BaseModel):
     user: UserResponse
     access_token: str
     token_type: str
+
+class UserSession(BaseModel):
+    id: str
+    name: str
+    user_id: int
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        orm_mode = True
