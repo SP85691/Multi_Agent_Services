@@ -4,8 +4,10 @@ from fastapi.responses import HTMLResponse
 from typing import List
 from schemas.UserSchemas import UserResponse
 from schemas.SessionSchemas import SessionCreate, SessionUpdate, SessionResponse
+from schemas.AgentSchemas import AgentResponse
 from services.db_config import get_db
 from services.session_management import create_session, get_active_sessions, update_session, invalidate_session, get_session_by_id
+from services.agent_management import get_agents_by_session
 from sqlalchemy.orm import Session
 from services.auth import get_current_user
 from models.SessionModels import Session as UserSession  # Correct import
@@ -39,7 +41,9 @@ def session_details_page(request: Request, session_id: str, db: Session = Depend
     session = get_session_by_id(session_id, db)
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
-    return templates.TemplateResponse("session.html", {"request": request, "session": session, "current_user": current_user})
+    agents = get_agents_by_session(session_id, db)
+    agent = agents[0] if agents else None
+    return templates.TemplateResponse("session.html", {"request": request, "session": session, "current_user": current_user, "agent": agent})
 
 @session_routes.delete("/sessions/{session_id}")
 async def delete_user_session(session_id: str, db: Session = Depends(get_db), current_user: UserResponse = Depends(get_current_user)):

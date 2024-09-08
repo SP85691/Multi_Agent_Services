@@ -17,3 +17,4 @@ class User(Base):
     updatedAt = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     sessions = relationship("Session", back_populates="user")
+    agents = relationship("Agent", back_populates="user")

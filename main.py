@@ -8,6 +8,7 @@ from services.db_config import setup_db, get_db
 from models.UserModels import User
 from Users import user
 from Sessions import sessions
+from Agents import agents
 from services.session_management import get_active_sessions, get_session_by_id
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
@@ -28,6 +29,7 @@ engine, Session = setup_db()
 app = FastAPI(title="Multi Agent API Services", description="This is a multi agent api services")
 app.include_router(user.user_routes)
 app.include_router(sessions.session_routes)
+app.include_router(agents.agent_routes)
 
 app.add_middleware(
     CORSMiddleware,
@@ -82,10 +84,3 @@ async def not_found_page(request: Request, current_user: User = Depends(get_opti
 @app.exception_handler(404)
 async def custom_404_handler(request: Request, exc: HTTPException):
     return RedirectResponse(url="/404")
-
-# Remove the custom exception handler for HTTP_401_UNAUTHORIZED
-# @app.exception_handler(HTTPException)
-# async def custom_http_exception_handler(request: Request, exc: HTTPException):
-#     if exc.status_code == status.HTTP_401_UNAUTHORIZED:
-#         return RedirectResponse(url="/login_page")  # Redirect to login page instead of 404
-#     return await request.app.default_exception_handler(request, exc)

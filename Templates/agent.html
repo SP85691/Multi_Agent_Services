@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Agent Details - Multi Agent Services{% endblock %}
+
+{% block header %}
+    <h1 class="text-2xl font-bold">Agent Details</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+        <div class="mb-4">
+            <h2 class="text-xl font-semibold">{{ agent.name }}</h2>
+        </div>
+        <div class="bg-gray-700 p-4 rounded-lg shadow-lg w-full max-w-md mx-auto relative">
+            <div class="absolute top-2 right-2 flex space-x-2">
+                <button id="update-agent-btn" class="text-blue-500 hover:text-blue-700" title="Update Agent">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button id="delete-agent-btn" class="text-red-500 hover:text-red-700" title="Delete Agent">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">Agent Information</h3>
+            <p class="text-gray-300">Name: {{ agent.name }}</p>
+            <p class="text-gray-300">ID: {{ agent.id }}</p>
+        </div>
+        <div class="flex justify-center mt-4">
+            <button id="prepare-agent-btn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                Prepare Agent
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal for preparing agent -->
+    <div id="prepare-agent-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h3 class="text-xl font-bold mb-4">Prepare Agent</h3>
+            <form id="prepare-agent-form">
+                <div class="mb-4">
+                    <label for="documents" class="block text-gray-300 mb-2">Upload Documents</label>
+                    <input type="file" id="documents" name="documents" class="w-full p-2 rounded bg-gray-700 text-gray-100" multiple required>
+                </div>
+                <div class="mb-4">
+                    <label for="instructions" class="block text-gray-300 mb-2">Instructions</label>
+                    <textarea id="instructions" name="instructions" class="w-full p-2 rounded bg-gray-700 text-gray-100" rows="4" required></textarea>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Prepare Agent</button>
+                    <button type="button" id="close-prepare-modal-btn" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('update-agent-btn').addEventListener('click', async function() {
+            const newName = prompt('Enter new agent name:', '{{ agent.name }}');
+            if (newName) {
+                const response = await fetch(`/sessions/{{ session.id }}/agents/{{ agent.id }}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${document.cookie.split('=')[1]}`
+                    },
+                    body: JSON.stringify({ name: newName })
+                });
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    alert('Failed to update agent');
+                }
+            }
+        });
+
+        document.getElementById('delete-agent-btn').addEventListener('click', async function() {
+            if (confirm('Are you sure you want to delete this agent?')) {
+                const response = await fetch(`/sessions/{{ session.id }}/agents/{{ agent.id }}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${document.cookie.split('=')[1]}`
+                    }
+                });
+                if (response.ok) {
+                    window.location.href = "{{ url_for('session_details_page', session_id=session.id) }}";
+                } else {
+                    alert('Failed to delete agent');
+                }
+            }
+        });
+
+        document.getElementById('prepare-agent-btn').addEventListener('click', function() {
+            document.getElementById('prepare-agent-modal').classList.remove('hidden');
+        });
+
+        document.getElementById('close-prepare-modal-btn').addEventListener('click', function() {
+            document.getElementById('prepare-agent-modal').classList.add('hidden');
+        });
+
+        document.getElementById('prepare-agent-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const formData = new FormData();
+            const documents = document.getElementById('documents').files;
+            for (let i = 0; i < documents.length; i++) {
+                formData.append('documents', documents[i]);
+            }
+            formData.append('instructions', document.getElementById('instructions').value);
+            const response = await fetch(`/sessions/{{ session.id }}/agents/{{ agent.id }}/prepare`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${document.cookie.split('=')[1]}`
+                },
+                body: formData
+            });
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                alert('Failed to prepare agent');
+            }
+        });
+    </script>
+{% endblock %}
