@@ -13,3 +13,11 @@ def setup_db():
     Base.metadata.create_all(engine)
     print("Connected to database")
     return engine, Session
+
+def get_db():
+    engine, Session = setup_db()
+    db = Session()
+    try:
+        yield db
+    finally:
+        db.close()
