@@ -1,4 +1,3 @@
-
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
@@ -33,3 +32,10 @@ class UserResponse(BaseModel):
     createdAt: datetime
     updatedAt: datetime
 
+    class Config:
+        orm_mode = True
+
+class UserRegisterResponse(BaseModel):
+    user: UserResponse
+    access_token: str
+    token_type: str

@@ -1,4 +1,3 @@
-
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
@@ -54,4 +53,36 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         raise credentials_exception
     return user
 
+def authenticate_user(username: str, password: str, db: Session = Depends(get_db)):
+    user = get_user_by_username(username, db)
+    if not user:
+        return False
+    if not verify_password(password, user.Password):
+        return False
+    return user
 
+def create_user(user_data: dict, db: Session):
+    user_data["Password"] = get_password_hash(user_data["Password"])
+    new_user = User(**user_data)
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return new_user
+
+def update_user(user_id: int, user_data: dict, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.id == user_id).first()
+    if user:
+        for key, value in user_data.items():
+            setattr(user, key, value)
+        db.commit()
+        db.refresh(user)
+        return user
+    return None
+
+def delete_user(user_id: int, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.id == user_id).first()
+    if user:
+        db.delete(user)
+        db.commit()
+        return {"message": "User deleted successfully"}
+    return None
