@@ -16,3 +16,5 @@ ollama
 pydantic
 pydantic[email]
 tortoise
+python-dotenv
+python-multipart

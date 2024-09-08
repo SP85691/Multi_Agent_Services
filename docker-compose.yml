@@ -1,0 +1,10 @@
+services:
+  pgvector:
+    image: vespaengine/vespa-pgvector
+    container_name: vespa-pgvector
+    ports:
+      - "8087:8087"
+    environment:
+      - VESPA_CONFIGSERVERS=http://vespa-configserver:19071
+    networks:
+      - vespanet
