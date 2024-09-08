@@ -27,7 +27,7 @@ async def login(request: Request, username: str = Form(...), password: str = For
     access_token = create_access_token(
         data={"sub": user.Username}, expires_delta=access_token_expires
     )
-    response = RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
+    response = RedirectResponse(url="/playground", status_code=status.HTTP_302_FOUND)
     response.set_cookie(key="access_token", value=f"Bearer {access_token}", httponly=True)
     return response
 
@@ -62,9 +62,7 @@ async def signup(request: Request, name: str = Form(...), username: str = Form(.
         updatedAt=db_user.updatedAt
     )
     
-    access_token = create_access_token(data={"sub": db_user.Username})
-    response = RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
-    response.set_cookie(key="access_token", value=f"Bearer {access_token}", httponly=True)
+    response = RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
     return response
 
 @user_routes.put("/update_user/{user_id}", response_model=UserUpdate)

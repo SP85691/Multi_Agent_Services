@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Playground - Multi Agent Services{% endblock %}
+
+{% block header %}
+    <h1 class="text-2xl font-bold">Playground</h1>
+    <p class="text-gray-300">Welcome, <i class="fas fa-user"></i> {{ current_user.Username }}</p>
+{% endblock %}
+
+{% block content %}
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h2 class="text-xl font-semibold mb-4">Sessions</h2>
+        <button id="new-session-btn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mb-4">New Session</button>
+        <div id="new-session-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
+                <h3 class="text-xl font-bold mb-4">Create New Session</h3>
+                <form id="new-session-form">
+                    <div class="mb-4">
+                        <label for="session-name" class="block text-gray-300 mb-2">Session Name</label>
+                        <input type="text" id="session-name" name="session-name" class="w-full p-2 rounded bg-gray-700 text-gray-100" required>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create</button>
+                        <button type="button" id="close-modal-btn" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for session in sessions %}
+                <div class="bg-gray-700 p-4 rounded-lg shadow-lg relative z-10 group">
+                    <h3 class="text-lg font-bold text-white">{{ session.name }}</h3>
+                    <p class="text-gray-300">Created at: {{ session.created_at }}</p>
+                    <div class="absolute top-2 right-2 flex space-x-2">
+                        <button class="edit-session-btn text-blue-500 hover:text-blue-700" data-session-id="{{ session.id }}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="delete-session-btn text-red-500 hover:text-red-700" data-session-id="{{ session.id }}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    <div class="absolute inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create an Agent</button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script>
+        document.getElementById('new-session-btn').addEventListener('click', function() {
+            document.getElementById('new-session-modal').classList.remove('hidden');
+        });
+        document.getElementById('close-modal-btn').addEventListener('click', function() {
+            document.getElementById('new-session-modal').classList.add('hidden');
+        });
+        document.getElementById('new-session-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const sessionName = document.getElementById('session-name').value;
+            const response = await fetch('/sessions/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${document.cookie.split('=')[1]}`
+                },
+                body: JSON.stringify({ name: sessionName })
+            });
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                alert('Failed to create session');
+            }
+        });
+
+        document.querySelectorAll('.edit-session-btn').forEach(button => {
+            button.addEventListener('click', async function() {
+                const sessionId = this.getAttribute('data-session-id');
+                const newName = prompt('Enter new session name:');
+                if (newName) {
+                    const response = await fetch(`/sessions/sessions/${sessionId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${document.cookie.split('=')[1]}`
+                        },
+                        body: JSON.stringify({ name: newName })
+                    });
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        alert('Failed to update session');
+                    }
+                }
+            });
+        });
+
+        document.querySelectorAll('.delete-session-btn').forEach(button => {
+            button.addEventListener('click', async function() {
+                const sessionId = this.getAttribute('data-session-id');
+                if (confirm('Are you sure you want to delete this session?')) {
+                    const response = await fetch(`/sessions/sessions/${sessionId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${document.cookie.split('=')[1]}`
+                        }
+                    });
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        alert('Failed to delete session');
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
