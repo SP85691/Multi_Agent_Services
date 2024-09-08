@@ -40,7 +40,7 @@
                         </button>
                     </div>
                     <div class="absolute inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create an Agent</button>
+                        <a href="{{ url_for('session_details_page', session_id=session.id) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Open Session</a>
                     </div>
                 </div>
             {% endfor %}

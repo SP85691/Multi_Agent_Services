@@ -8,7 +8,7 @@ from services.db_config import setup_db, get_db
 from models.UserModels import User
 from Users import user
 from Sessions import sessions
-from services.session_management import get_active_sessions
+from services.session_management import get_active_sessions, get_session_by_id
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates

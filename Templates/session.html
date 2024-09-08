@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Session Details - Multi Agent Services{% endblock %}
+
+{% block header %}
+    <h1 class="text-2xl font-bold">Session Details</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h2 class="text-xl font-semibold mb-4">Session Information : {{ session.id }}</h2>
+    </div>
+{% endblock %}

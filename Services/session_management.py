@@ -14,6 +14,9 @@ def create_session(user_id: int, name: str, db: Session) -> UserSession:
 def get_active_sessions(user_id: int, db: Session) -> List[UserSession]:
     return db.query(UserSession).filter(UserSession.user_id == user_id).all()
 
+def get_session_by_id(session_id: str, db: Session) -> UserSession:
+    return db.query(UserSession).filter(UserSession.id == session_id).first()
+
 def update_session(session_id: str, name: str, db: Session) -> UserSession:
     session = db.query(UserSession).filter(UserSession.id == session_id).first()
     if session:
