@@ -7,8 +7,8 @@
 {% endblock %}
 
 {% block content %}
-    <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-        <div id="chat-box" class="bg-gray-700 p-4 rounded-lg shadow-lg w-full max-w-md mx-auto h-96 overflow-y-auto">
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-6xl mx-auto h-[calc(100vh-200px)] flex flex-col">
+        <div id="chat-box" class="bg-gray-700 p-4 rounded-lg shadow-lg w-full flex-grow overflow-y-auto space-y-4">
             <!-- Chat messages will be appended here -->
         </div>
         <div class="mt-4">
@@ -26,39 +26,84 @@
         <div class="loader"></div>
     </div>
 
+    <!-- Include marked library for markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
     <script>
-        document.getElementById('chat-form').addEventListener('submit', async function(event) {
+        const chatBox = document.getElementById('chat-box');
+        const chatForm = document.getElementById('chat-form');
+        const chatMessage = document.getElementById('chat-message');
+        const loader = document.getElementById('loader');
+
+        // Set options for marked
+        marked.setOptions({
+            breaks: true, // Convert line breaks to <br>
+            gfm: true, // GitHub Flavored Markdown
+        });
+
+        chatForm.addEventListener('submit', async function(event) {
             event.preventDefault();
-            document.getElementById('loader').classList.remove('hidden');
-            const message = document.getElementById('chat-message').value;
-            const sessionId = "{{ session_id }}";
-            const agentId = "{{ agent_id }}";
-            const response = await fetch(`/sessions/${sessionId}/agents/${agentId}/chat`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${document.cookie.split('=')[1]}`
-                },
-                body: JSON.stringify({ message: message, session_id: sessionId, agent_id: agentId, user_id: {{ current_user.id }} })
-            });
-            document.getElementById('loader').classList.add('hidden');
-            if (response.ok) {
-                const chatResponse = await response.json();
-                const chatBox = document.getElementById('chat-box');
-                const userMessage = document.createElement('div');
-                userMessage.className = 'text-right text-white mb-2';
-                userMessage.textContent = message;
-                chatBox.appendChild(userMessage);
-                const agentResponse = document.createElement('div');
-                agentResponse.className = 'text-left text-gray-300 mb-2';
-                agentResponse.textContent = chatResponse.response;
-                chatBox.appendChild(agentResponse);
-                document.getElementById('chat-message').value = '';
-                chatBox.scrollTop = chatBox.scrollHeight;
-            } else {
-                alert('Failed to send message');
+            const message = chatMessage.value.trim();
+            if (!message) return;
+
+            // Display user message
+            appendMessage('user', message);
+            chatMessage.value = '';
+
+            loader.classList.remove('hidden');
+            try {
+                const response = await fetch(`/sessions/{{ session_id }}/agents/{{ agent_id }}/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${document.cookie.split('=')[1]}`
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    // Display agent response
+                    appendMessage('agent', data.response, true);
+                } else {
+                    throw new Error('Failed to get response from agent');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                appendMessage('error', 'An error occurred while processing your request.');
+            } finally {
+                loader.classList.add('hidden');
             }
         });
+
+        function appendMessage(sender, content, isMarkdown = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex ${sender === 'user' ? 'justify-end' : 'justify-start'} items-start space-x-2`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = `w-8 h-8 rounded-full flex items-center justify-center ${sender === 'user' ? 'bg-blue-500' : 'bg-green-500'}`;
+            avatar.innerHTML = sender === 'user' ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
+
+            const bubble = document.createElement('div');
+            bubble.className = `${sender === 'user' ? 'bg-blue-600' : 'bg-green-600'} text-white p-3 rounded-lg max-w-xs md:max-w-md lg:max-w-lg overflow-auto`;
+            
+            if (isMarkdown) {
+                bubble.innerHTML = marked.parse(content);
+            } else {
+                bubble.textContent = content;
+            }
+
+            if (sender === 'user') {
+                messageDiv.appendChild(bubble);
+                messageDiv.appendChild(avatar);
+            } else {
+                messageDiv.appendChild(avatar);
+                messageDiv.appendChild(bubble);
+            }
+
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
     </script>
 
     <style>
@@ -72,6 +117,31 @@
         }
         @keyframes l1 {
             to { transform: rotate(.5turn); }
+        }
+        /* Add some basic styling for markdown content */
+        .bg-green-600 h1, .bg-green-600 h2, .bg-green-600 h3, .bg-green-600 h4, .bg-green-600 h5, .bg-green-600 h6 {
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+            font-weight: bold;
+        }
+        .bg-green-600 p {
+            margin-bottom: 0.5em;
+        }
+        .bg-green-600 ul, .bg-green-600 ol {
+            margin-left: 1.5em;
+            margin-bottom: 0.5em;
+        }
+        .bg-green-600 pre {
+            background-color: rgba(0, 0, 0, 0.1);
+            padding: 0.5em;
+            border-radius: 0.25em;
+            overflow-x: auto;
+        }
+        .bg-green-600 code {
+            font-family: monospace;
+            background-color: rgba(0, 0, 0, 0.1);
+            padding: 0.1em 0.2em;
+            border-radius: 0.2em;
         }
     </style>
 {% endblock %}

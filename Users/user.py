@@ -6,9 +6,9 @@ from sqlalchemy.orm import Session
 from datetime import timedelta
 from schemas.UserSchemas import UserLogin, UserCreate, UserUpdate, UserResponse, UserRegisterResponse
 from schemas.SessionSchemas import SessionCreate, SessionUpdate, SessionResponse
-from services.auth import create_access_token, get_current_user, create_user, authenticate_user, update_user, delete_user, get_user_by_username, get_password_hash, ACCESS_TOKEN_EXPIRE_MINUTES
-from services.db_config import get_db
-from services.session_management import create_session, get_active_sessions, update_session, invalidate_session
+from Services.auth import create_access_token, get_current_user, create_user, authenticate_user, update_user, delete_user, get_user_by_username, get_password_hash, ACCESS_TOKEN_EXPIRE_MINUTES
+from Services.db_config import get_db
+from Services.session_management import create_session, get_active_sessions, update_session, invalidate_session
 
 user_routes = APIRouter(tags=['Users'])
 templates = Jinja2Templates(directory="templates")

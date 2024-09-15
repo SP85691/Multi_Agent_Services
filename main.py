@@ -3,14 +3,13 @@ from sqlalchemy.orm import Session as SessionDB
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from datetime import timedelta
-from services.auth import authenticate_user, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, get_current_user, get_optional_user
-from services.db_config import setup_db, get_db
+from Services.auth import authenticate_user, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, get_current_user, get_optional_user
+from Services.db_config import setup_db, get_db
 from models.UserModels import User
 from Users import user
 from Sessions import sessions
 from Agents import agents
-from Chat import chat
-from services.session_management import get_active_sessions, get_session_by_id
+from Services.session_management import get_active_sessions, get_session_by_id
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
@@ -31,7 +30,6 @@ app = FastAPI(title="Multi Agent API Services", description="This is a multi age
 app.include_router(user.user_routes)
 app.include_router(sessions.session_routes)
 app.include_router(agents.agent_routes)
-app.include_router(chat.chat_routes)
 
 app.add_middleware(
     CORSMiddleware,

@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from sqlalchemy.orm import relationship
-from services.db_config import Base
+from Services.db_config import Base
 from datetime import datetime
 
 class User(Base):
@@ -18,4 +18,4 @@ class User(Base):
 
     sessions = relationship("Session", back_populates="user")
     agents = relationship("Agent", back_populates="user")
-    chats = relationship("Chat", back_populates="user")  # Add this line
+    chats = relationship("Chat", back_populates="user")

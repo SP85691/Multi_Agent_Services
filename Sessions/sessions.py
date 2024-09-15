@@ -5,11 +5,11 @@ from typing import List
 from schemas.UserSchemas import UserResponse
 from schemas.SessionSchemas import SessionCreate, SessionUpdate, SessionResponse
 from schemas.AgentSchemas import AgentResponse
-from services.db_config import get_db
-from services.session_management import create_session, get_active_sessions, update_session, invalidate_session, get_session_by_id
-from services.agent_management import get_agents_by_session
+from Services.db_config import get_db
+from Services.session_management import create_session, get_active_sessions, update_session, invalidate_session, get_session_by_id
+from Services.agent_management import get_agents_by_session
 from sqlalchemy.orm import Session
-from services.auth import get_current_user
+from Services.auth import get_current_user
 from models.SessionModels import Session as UserSession  # Correct import
 
 session_routes = APIRouter(tags=["Sessions"])

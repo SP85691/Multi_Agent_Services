@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
 from typing import List
 from schemas.ChatSchemas import ChatCreate, ChatResponse
-from services.db_config import get_db
-from services.auth import get_current_user
-from services.agent_management import get_agent_by_id, chains_cache
+from Services.db_config import get_db
+from Services.auth import get_current_user
+from Services.agent_management import get_agent_by_id, chains_cache
 from models.UserModels import User
 from models.ChatModels import Chat
 from fastapi.templating import Jinja2Templates

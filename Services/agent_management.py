@@ -140,13 +140,33 @@ def prepare_rag_chain(agent_id: str, instructions: str, docs: list, db: Session)
     if not agent:
         raise ValueError("Agent not found")
     
-    # Process the documents and instructions
-    document_paths = json.dumps(docs)
-    agent.document_paths = document_paths
+    # Process the instructions
     agent.prompt_template = instructions
-    db.commit()
     
-    chain = run(docs)
+    # If documents are provided, process them
+    if docs:
+        chain = run(docs)
+        agent.document_paths = json.dumps(docs)
+    else:
+        # Create a simple chain without document processing
+        llm = ChatGroq(
+            model = os.getenv("MODEL_NAME"),
+            api_key=os.getenv("GROQ_API_KEY"),
+            temperature=0.4,
+        )
+        memory = ConversationBufferMemory(
+            memory_key="chat_history",
+            output_key="answer",
+            return_messages=True,
+        )
+        chain = ConversationalRetrievalChain.from_llm(
+            llm=llm, 
+            chain_type="stuff",
+            memory=memory, 
+            return_source_documents=False,
+        )
+    
+    db.commit()
     
     # Store the chain in the global cache
     chains_cache[agent_id] = chain

@@ -46,10 +46,10 @@
     <div id="prepare-agent-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
         <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md relative">
             <h3 class="text-xl font-bold mb-4">Prepare Agent</h3>
-            <form id="prepare-agent-form">
+            <form id="prepare-agent-form" enctype="multipart/form-data">
                 <div class="mb-4">
                     <label for="documents" class="block text-gray-300 mb-2">Upload Documents</label>
-                    <input type="file" id="documents" name="documents" class="w-full p-2 rounded bg-gray-700 text-gray-100" multiple required>
+                    <input type="file" id="documents" name="pdf_file" class="w-full p-2 rounded bg-gray-700 text-gray-100" accept=".pdf">
                 </div>
                 <div class="mb-4">
                     <label for="instructions" class="block text-gray-300 mb-2">Instructions</label>
@@ -122,12 +122,9 @@
             event.preventDefault();
             document.getElementById('prepare-agent-modal').classList.add('hidden');
             document.getElementById('loader').classList.remove('hidden');
-            const formData = new FormData();
-            const documents = document.getElementById('documents').files;
-            for (let i = 0; i < documents.length; i++) {
-                formData.append('documents', documents[i]);
-            }
-            formData.append('instructions', document.getElementById('instructions').value);
+            
+            const formData = new FormData(this);
+            
             const response = await fetch(`/sessions/{{ session.id }}/agents/{{ agent.id }}/prepare`, {
                 method: 'POST',
                 headers: {
@@ -135,13 +132,15 @@
                 },
                 body: formData
             });
+            
             document.getElementById('loader').classList.add('hidden');
             if (response.ok) {
                 document.getElementById('chat-agent-btn').classList.remove('hidden');
                 document.getElementById('chat-agent-btn').disabled = false;
                 document.getElementById('success-modal').classList.remove('hidden');
             } else {
-                alert('Failed to prepare agent');
+                const errorData = await response.json();
+                alert('Failed to prepare agent: ' + JSON.stringify(errorData));
             }
         });
 

@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Text
 from sqlalchemy.orm import relationship
-from services.db_config import Base
+from Services.db_config import Base
 from datetime import datetime
 import uuid
 

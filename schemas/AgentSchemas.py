@@ -23,3 +23,5 @@ class AgentResponse(AgentBase):
 
     class Config:
         orm_mode = True
+
+# Remove the AgentPrepare class
