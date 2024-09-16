@@ -1,14 +1,138 @@
 {% extends "base.html" %}
 
-{% block title %}Home - My Application{% endblock %}
-
-{% block header %}
-    <h1 class="text-2xl font-bold">Welcome to My Application</h1>
-{% endblock %}
+{% block title %}TaskBotIX - AI-Powered Task Management{% endblock %}
 
 {% block content %}
-    <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-        <h2 class="text-xl font-semibold mb-4">Home Page</h2>
-        <p class="text-gray-300">This is the home page of my application.</p>
+<div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+    <!-- Hero Section -->
+    <div class="mb-12 text-center">
+        <h1 class="text-5xl font-bold mb-4">Welcome to TaskBotIX</h1>
+        <p class="text-2xl text-gray-300 mb-6">Revolutionizing Task Management with AI</p>
+        <img src="https://images.unsplash.com/photo-1612066473428-fb6833a0d855?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="AI Technology" class="w-full h-64 object-cover mt-6 rounded-lg">
     </div>
+            <!-- Mission Section -->
+    <main class="container mx-auto my-12 p-4">
+        <div class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4">Our Mission</h2>
+            <p class="text-gray-300">At TaskBotIX, we strive to empower individuals and businesses with cutting-edge AI-driven task management solutions, enhancing productivity and efficiency in the digital age. We are committed to developing innovative tools that simplify complex workflows and enable our users to focus on what truly matters.</p>
+        </div>
+    
+        <!-- Vision Section -->
+            <div class="mb-12">
+                <h2 class="text-2xl font-semibold mb-4">Our Vision</h2>
+                <p class="text-gray-300">We envision a world where AI seamlessly integrates into daily workflows, making task management intuitive, intelligent, and effortless for everyone. TaskBotIX aims to be at the forefront of this revolution, continuously pushing the boundaries of what's possible in AI-assisted productivity.</p>
+            </div>
+    
+            <!-- Team Section -->
+            <div>
+                <h2 class="text-2xl font-semibold mb-6 text-center">Meet Our Team</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <img src="https://images.unsplash.com/photo-1651955784685-f969100bfc25?q=80&w=2131&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Team Member 1" class="w-32 h-32 rounded-full mx-auto mb-4">
+                        <h3 class="text-xl font-semibold">Jane Doe</h3>
+                        <p class="text-gray-300">CEO & Founder</p>
+                    </div>
+                    <div class="text-center">
+                        <img src="https://images.unsplash.com/photo-1712002641088-9d76f9080889?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Team Member 2" class="w-32 h-32 rounded-full mx-auto mb-4">
+                        <h3 class="text-xl font-semibold">John Smith</h3>
+                        <p class="text-gray-300">CTO</p>
+                    </div>
+                    <div class="text-center">
+                        <img src="https://images.unsplash.com/photo-1710993011836-108ba89ebe51?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Team Member 3" class="w-32 h-32 rounded-full mx-auto mb-4">
+                        <h3 class="text-xl font-semibold">Alice Johnson</h3>
+                        <p class="text-gray-300">Lead AI Engineer</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <main class="container mx-auto my-12 p-4">
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-semibold mb-8 text-center">Our Services</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-gray-700 p-6 rounded-lg shadow-md flex flex-col items-center">
+                    <i class="fas fa-tasks text-4xl text-blue-500 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Intelligent Task Management</h3>
+                    <p class="text-gray-300 text-center">Optimize your workflow with AI-powered task prioritization and resource allocation, increasing productivity and efficiency.</p>
+                </div>
+                <div class="bg-gray-700 p-6 rounded-lg shadow-md flex flex-col items-center">
+                    <i class="fas fa-cogs text-4xl text-green-500 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Automated Workflow Optimization</h3>
+                    <p class="text-gray-300 text-center">Streamline your processes with intelligent automation, reducing manual work and minimizing errors in your operations.</p>
+                </div>
+                <div class="bg-gray-700 p-6 rounded-lg shadow-md flex flex-col items-center">
+                    <i class="fas fa-brain text-4xl text-purple-500 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">AI-Powered Decision Support</h3>
+                    <p class="text-gray-300 text-center">Make informed decisions with our advanced analytics and machine learning algorithms, providing data-driven insights.</p>
+                </div>
+                <div class="bg-gray-700 p-6 rounded-lg shadow-md flex flex-col items-center">
+                    <i class="fas fa-robot text-4xl text-red-500 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Custom Agent Development</h3>
+                    <p class="text-gray-300 text-center">Create tailored AI agents to meet your specific business needs, enhancing your capabilities in unique ways.</p>
+                </div>
+                <div class="bg-gray-700 p-6 rounded-lg shadow-md flex flex-col items-center">
+                    <i class="fas fa-plug text-4xl text-yellow-500 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Integration Services</h3>
+                    <p class="text-gray-300 text-center">Seamlessly connect TaskBotIX with your existing tools and platforms, ensuring a smooth and efficient workflow.</p>
+                </div>
+                <div class="bg-gray-700 p-6 rounded-lg shadow-md flex flex-col items-center">
+                    <i class="fas fa-chart-line text-4xl text-indigo-500 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Performance Analytics</h3>
+                    <p class="text-gray-300 text-center">Track and analyze your system's performance with detailed metrics and visualizations for continuous improvement.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+        <main class="container mx-auto my-12 p-4">
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-semibold mb-4">Contact Us</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <p class="text-gray-300 mb-4">Get in touch with us for any inquiries or support.</p>
+                    <ul class="text-gray-300 mb-4">
+                        <li>Email: support@taskbotix.com</li>
+                        <li>Phone: +1 (555) 123-4567</li>
+                        <li>Address: 123 AI Street, Tech City, TC 12345</li>
+                    </ul>
+                    <div class="w-full h-64">
+                        <iframe 
+                            width="100%" 
+                            height="100%" 
+                            frameborder="0" 
+                            scrolling="no" 
+                            marginheight="0" 
+                            marginwidth="0" 
+                            src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=1%20Grafton%20Street,%20Dublin,%20Ireland+(TaskBotIX)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
+                        </iframe>
+                    </div>
+                </div>
+                <div>
+                    <form class="space-y-4">
+                        <div>
+                            <label for="name" class="block text-gray-300 mb-2">Name</label>
+                            <input type="text" id="name" name="name" class="w-full p-2 rounded bg-gray-700 text-gray-100" required>
+                        </div>
+                        <div>
+                            <label for="email" class="block text-gray-300 mb-2">Email</label>
+                            <input type="email" id="email" name="email" class="w-full p-2 rounded bg-gray-700 text-gray-100" required>
+                        </div>
+                        <div>
+                            <label for="phone" class="block text-gray-300 mb-2">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" class="w-full p-2 rounded bg-gray-700 text-gray-100">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-gray-300 mb-2">Query or Suggestions</label>
+                            <textarea id="message" name="message" rows="4" class="w-full p-2 rounded bg-gray-700 text-gray-100" required></textarea>
+                        </div>
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
 {% endblock %}

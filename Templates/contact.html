@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us - TaskBotIX{% endblock %}
+
+{% block content %}
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-semibold mb-4">Contact Us</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <p class="text-gray-300 mb-4">Get in touch with us for any inquiries or support.</p>
+                <ul class="text-gray-300 mb-4">
+                    <li>Email: support@taskbotix.com</li>
+                    <li>Phone: +1 (555) 123-4567</li>
+                    <li>Address: 123 AI Street, Tech City, TC 12345</li>
+                </ul>
+                <div class="w-full h-64">
+                    <iframe 
+                        width="100%" 
+                        height="100%" 
+                        frameborder="0" 
+                        scrolling="no" 
+                        marginheight="0" 
+                        marginwidth="0" 
+                        src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=1%20Grafton%20Street,%20Dublin,%20Ireland+(TaskBotIX)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
+                    </iframe>
+                </div>
+            </div>
+            <div>
+                <form class="space-y-4">
+                    <div>
+                        <label for="name" class="block text-gray-300 mb-2">Name</label>
+                        <input type="text" id="name" name="name" class="w-full p-2 rounded bg-gray-700 text-gray-100" required>
+                    </div>
+                    <div>
+                        <label for="email" class="block text-gray-300 mb-2">Email</label>
+                        <input type="email" id="email" name="email" class="w-full p-2 rounded bg-gray-700 text-gray-100" required>
+                    </div>
+                    <div>
+                        <label for="phone" class="block text-gray-300 mb-2">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" class="w-full p-2 rounded bg-gray-700 text-gray-100">
+                    </div>
+                    <div>
+                        <label for="message" class="block text-gray-300 mb-2">Query or Suggestions</label>
+                        <textarea id="message" name="message" rows="4" class="w-full p-2 rounded bg-gray-700 text-gray-100" required></textarea>
+                    </div>
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

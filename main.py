@@ -84,3 +84,20 @@ async def not_found_page(request: Request, current_user: User = Depends(get_opti
 @app.exception_handler(404)
 async def custom_404_handler(request: Request, exc: HTTPException):
     return RedirectResponse(url="/404")
+
+@app.post("/submit-contact", response_class=HTMLResponse)
+async def submit_contact(
+    request: Request,
+    name: str = Form(...),
+    email: str = Form(...),
+    phone: str = Form(...),
+    message: str = Form(...)
+):
+    # Here you would typically process the form data,
+    # e.g., send an email or save to a database
+    
+    # For now, we'll just return a success message
+    return templates.TemplateResponse("contact_success.html", {
+        "request": request,
+        "name": name
+    })
